@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1>Salesman Daily Wage Calculation</h1>
+<label>Full Name</label><input type="text" size="5" id="nm"><br><br>
+<label>Daily Wage</label><input type="text" size="5" id="dw"><br><br>
+<h3>Today Sales</h3>
+<label>Fruits  Sales</label><input type="text" size="5" id="fs" value="1000"><br><br>
+<label>Vegitables Sales</label><input type="text" size="5" id="vs" value="4000"><br><br>
+<label>Stationary Sales</label><input type="text" size="5" id="ss" value="5000"><br><br>
+<input type="button" value="clear" onClick='clearAll()'></input>
+<input type="button" value="calculate" onClick='calculate()'></input>
+<hr>
+<h3>Commission Details</h3>
+<label>Fruits 10%</label><input type="text" size="5" id="f" readonly><br><br>
+<label>Vegitables 7%</label><input type="text" size="5" id="v" readonly><br><br>
+<label>Stationary 4%</label><input type="text" size="5" id="s" readonly><br><br>
+<label>Daily Wage</label><input type="text" size="5" id="da"><br><br>
+<label>Total Commission</label><input type="text" size="5" id="tc" readonly><br><br>
+<hr>
+<label>Total Daily Wage</label><input type="text" size="5" id="tdw" readonly>
+
+<script>
+    function calculate(){
+        let name=document.getElementById("nm").value;
+        let dwage=parseInt(document.getElementById("dw").value);
+        let fruit=parseInt(document.getElementById("fs").value);
+        let veg=parseInt(document.getElementById("vs").value);
+        let sta=parseInt(document.getElementById("ss").value);
+        let fcom=(fruit*10)/100;
+        let vcom=(veg*7)/100;
+        let scom=(sta*4)/100;
+        let totcom=fcom+vcom+scom;
+        let totda=dwage;
+        let totpay=dwage+totcom;
+        document.getElementById("f").value=fcom;
+        document.getElementById("v").value=vcom;
+        document.getElementById("s").value=scom;
+        document.getElementById("tc").value=totcom;
+        document.getElementById("da").value=totda;
+        document.getElementById("tdw").value=totpay;
+    }
+    function clearAll(){
+        document.getElementById("nm").value=""; 
+        document.getElementById("bs").value=""; 
+        document.getElementById("dw").value=""; 
+        document.getElementById("fs").value=""; 
+        document.getElementById("vs").value=""; 
+        document.getElementById("ss").value=""; 
+        document.getElementById("f").value="";
+        document.getElementById("v").value=""; 
+        document.getElementById("s").value=""; 
+        document.getElementById("tc").value=""; 
+        document.getElementById("tdw").value=""; 
+        document.getElementById("nm").focus(); 
+    }
+
+</script>
+
+</body>
+</html>

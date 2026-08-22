@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<h1>Student Admission Form</h1> 
+<label>Full name</label><input type="text" size="10" id="na"><br><br>
+<label>Mobile no</label><input type="text" size="10" id="mb"><br><br>
+<label>Email id</label><input type="text" size="10" id="em"><br><br>
+ <label for="course">Choose a course</label>
+ <select id="course">
+    <option value="">--Select course--</option>
+    <option value="MCA" data-fee="120000">Masters in Computer Application - 120000</option>
+    <option value="MBA" data-fee="100000">Masters in Business Administration - 100000</option>
+    <option value="BCA" data-fee="80000">Bachelors in Computer Application - 80000</option>
+ </select>
+ <h3>Additional Services</h3>
+ <input type="checkbox" id="hl" value="5000"><label>Hostel</label><br><br>
+ <input type="checkbox" id="ts" value="2000"><label>Transportation</label><br><br>
+ <input type="checkbox" id="fd" value="3000"><label>Food</label><br><br>
+ <input type="checkbox" id="net" value="300"><label>Internet service</label><br><br>
+ <input type="button" value="Calculate" onClick='totalFee()'><br><br>
+ <label>Course fee per month</label><input type="text" size="5" id="monthfee" readonly><br><br>
+ <label>Additional service fee</label><input type="text" size="5" id="addfee" readonly><br><br>
+ <label>Total fee</label><input type="text" size="5" id="total" readonly><br><br>
+ <script>
+    function totalFee(){
+        let cselect=document.getElementById("course");
+        let soption=cselect.options[cselect.selectedIndex];
+        let yfee=parseInt(soption.getAttribute("data-fee")) || 0;
+        if (yfee == 0){
+            alert("please select a course");
+            return;
+        }
+        let cfeepm=yfee/12;
+        let afee = 0;
+        if (document.getElementById("hl").checked){
+            afee += 5000;
+        }
+        if (document.getElementById("ts").checked){
+            afee += 2000;
+        }
+        if (document.getElementById("fd").checked){
+            afee += 3000;
+        }
+        if (document.getElementById("net").checked){
+            afee += 300;
+        }
+        let totfee=cfeepm+afee;
+        document.getElementById("monthfee").value= cfeepm.toFixed(2);
+        document.getElementById("addfee").value= afee;
+        document.getElementById("total").value= totfee.toFixed(2);
+
+
+    }
+ </script>
+</body>
+</html>
+                

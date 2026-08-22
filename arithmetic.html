@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1>Calculator</h1>
+<label>Number</label><input type="text" size="4" id="num1"><br><br>
+<label>Number</label><input type="text" size="4" id="num2"><br><br>
+<p><b>Select Operation(s):</b></p>
+<input type="radio" id="add" value="add" name="op"><label for="add">Addition</label><br><br>
+<input type="radio" id="sub" value="sub" name="op"><label for="sub">Subtraction</label><br><br>
+<input type="radio" id="mul" value="mul" name="op"><label for="mul">Multiplication</label><br><br>
+<input type="radio" id="div" value="div" name="op"><label for="div">Division</label><br><br>
+<input type="button" value="calculate" onClick="calculate()"></input>
+<p id="result"></p>
+
+<script>
+    function calculate(){
+        let n1=parseInt(document.getElementById("num1").value);
+        let n2=parseInt(document.getElementById("num2").value);
+        let resultdiv=document.getElementById("result");
+        let output="";
+        if (isNaN(n1) || isNaN(n2)){
+            resultdiv.innerHTML="please enter both numbers";
+            return;
+        }
+        let checkboxes=document.querySelectorAll('input[name="op"]:checked');
+        if (checkboxes.length===0){
+            resultdiv.innerHTML="please select at least one operation";
+            return;
+        }
+        let i=0;
+        do{
+            let op=checkboxes[i].value;
+            let res;
+            let symbol;
+            switch(op) {
+                case "add":
+                    res=n1+n2;
+                    symbol="+";
+                    break;
+                case "sub":
+                    res=n1-n2;
+                    symbol="-";
+                    break;
+                case "mul":
+                    res=n1*n2;
+                    symbol="*";
+                    break;
+                case "div": 
+                if (n2===0){
+                    output += n1+ "/" +n2+ "=cannot divide by zero<br>";
+                    i++;
+                    continue;
+                }  
+                  res=n1/n2;
+                  symbol="/";
+                  break;
+
+            }
+            output += n1 + " " + symbol + " " + n2 + "=" + res + "<br>";
+            i++;
+        }while(i<checkboxes.length);
+        resultdiv.innerHTML=output;
+    }
+</script>
+
+</body>
+</html>

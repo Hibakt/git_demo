@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Product Details</h2>
+<label>product name</label><input type="text" size=5 id="nm"><br><br>
+<label>product quantity</label><input type="text" size=5 id="cnt"><br><br>
+<label>product rate</label><input type="text" size=5 id="rt"><br><br>
+<input type="button" value="clear" onClick='clearAll()'></input>
+<input type="button" value="calculate" onClick='productPrice()'></input><br><br>
+<label>product gst %</label><input type="text" size=5 id="gst" readonly><br><br>
+<label>product price</label><input type="text" size=5 id="pr" readonly><br><br>
+<label>total price</label><input type="text" size=5 id="tot" readonly><br><br>
+<label>product discount 5%</label><input type="text" size=5 id="dis" readonly><br><br>
+<label>payment price</label><input type="text" size=5 id="pp" readonly><br><br>
+<p id="demo"></p>
+
+<script>
+function clearAll(){
+  document.getElementById("nm").value=""; 
+  document.getElementById("cnt").value=""; 
+  document.getElementById("rt").value=""; 
+  document.getElementById("pr").value=""; 
+  document.getElementById("gst").value=""; 
+  document.getElementById("tot").value=""; 
+  document.getElementById("dis").value="";
+  document.getElementById("pp").value=""; 
+   document.getElementById("nm").focus();  
+}  
+function productPrice(){
+let prname=document.getElementById("nm").value;
+let prcontity=parseInt(document.getElementById("cnt").value);
+let prrate=parseInt(document.getElementById("rt").value);
+let prprice=prcontity*prrate;
+let prgst=(prprice*18)/100;
+let totprice=prprice+prgst;
+let prdis=(totprice*5)/100;
+let pprice=totprice-prdis;
+document.getElementById("pr").value=prprice;
+document.getElementById("gst").value=prgst;
+document.getElementById("tot").value=totprice;
+document.getElementById("dis").value=prdis;
+document.getElementById("pp").value=pprice;
+}
+</script>
+
+</body>
+</html>

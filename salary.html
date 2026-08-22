@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h2>Salary Calculations</h2>
+<label>NAME</label><input type="text" size=5 id="na"><br><br>
+<label>DEPARTMENT</label><input type="text" size=5 id="dp"><br><br>
+<label>BASIC SALARY</label><input type="text" size=5 id="ba"><br><br>
+<input type="button" value="clear" onClick="clearAll()"></input>
+<input type="button" value="calculate" onClick='netSalary()'></input><br><br>
+<label>HRA</label><input type="text" size=5 id="hra" readonly><br><br>
+<label>TA</label><input type="text" size=5 id="ta" readonly><br><br>
+<label>DA</label><input type="text" size=5 id="da" readonly><br><br>
+<label>TOTAL SALARY</label><input type="text" size=5 id="tot" readonly><br><br>
+<label>INSURANCE</label><input type="text" size=5 id="in" readonly><br><br>
+<label>PF</label><input type="text" size=5 id="pfs" readonly><br><br>
+<label>WF</label><input type="text" size=5 id="wfs" readonly><br><br>
+<label>DEDUCTION</label><input type="text" size=5 id="DE" readonly><br><br>
+<label>NET SALARY</label><input type="text" size=5 id="net" readonly><br><br>
+<script>
+    function clearAll(){
+        document.getElementById("na").value="";
+        document.getElementById("dp").value="";
+        document.getElementById("ba").value="";
+        document.getElementById("hra").value="";
+        document.getElementById("ta").value="";
+        document.getElementById("da").value="";
+        document.getElementById("tot").value="";
+        document.getElementById("in").value="";
+        document.getElementById("pfs").value="";
+        document.getElementById("wfs").value="";
+        document.getElementById("DE").value="";
+        document.getElementById("net").value="";
+        document.getElementById("na").focus();
+    }
+    function netSalary(){
+        let name=document.getElementById("na").value;
+        let dep=document.getElementById("dp").value;
+        let bsalary=parseInt(document.getElementById("ba").value);
+        let HRAs=(bsalary*20|15)/100;
+        let ta=(bsalary*12)/100;
+        let da=(bsalary*8)/100;
+        let tsalary=bsalary+HRAs+ta+da;
+        let insurance=(bsalary*5)/100;
+        let pf=(bsalary*12)/100;
+        let wf=(bsalary*5)/100;
+        let deduction=insurance+pf+wf;
+        let netSalary=tsalary-deduction;
+        document.getElementById("hra").value=HRAs;
+        document.getElementById("ta").value=ta;
+        document.getElementById("da").value=da;
+        document.getElementById("tot").value=tsalary;
+        document.getElementById("in").value=insurance;
+        document.getElementById("pfs").value=pf;
+        document.getElementById("wfs").value=wf;
+        document.getElementById("DE").value=deduction;
+        document.getElementById("net").value=netSalary;
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NutriFact</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Arial,Helvetica,sans-serif;color:#101810;background:#fff}
+button,input,select{font:inherit}
+.container{width:92%;max-width:1380px;margin:auto}
+
+/* HEADER */
+header{height:82px;background:#fff;border-bottom:1px solid #edf0eb;position:sticky;top:0;z-index:20}
+.nav{height:100%;display:flex;align-items:center;gap:35px}
+.logo{display:flex;align-items:center;gap:10px;margin-right:auto;font-size:32px;font-weight:800;cursor:pointer}
+.logo span{color:#3c941e}
+.logo-icon{width:48px;height:48px;border-radius:50%;background:#edf7e8;display:grid;place-items:center;font-size:28px}
+.menu{display:flex;align-items:center;gap:38px;height:100%}
+.menu button{border:0;background:none;cursor:pointer;font-size:17px;height:100%;padding:0;position:relative}
+.menu button.active{color:#398b1c;font-weight:bold}
+.menu button.active:after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:#398b1c}
+.search{width:390px;height:51px;border:1px solid #dfe4dc;border-radius:14px;display:flex;overflow:hidden}
+.search input{flex:1;border:0;outline:0;padding:0 18px;color:#333}
+.search button{width:60px;border:0;background:#3d921f;color:#fff;font-size:25px;cursor:pointer}
+
+/* PAGE SYSTEM */
+.page{display:none}
+.page.active{display:block}
+
+/* HOME */
+.hero{min-height:555px;background:linear-gradient(90deg,#fff 0%,#fff 49%,#f5f8f0 100%)}
+.hero-grid{min-height:555px;display:grid;grid-template-columns:49% 51%;align-items:center}
+.hero-content{padding:50px 0}
+.hero h1{font-size:68px;line-height:1.04;letter-spacing:-2.5px;margin-bottom:25px}
+.hero h1 span{color:#3d941f}
+.hero p{font-size:21px;color:#313731;line-height:1.8;max-width:650px;margin-bottom:32px}
+.actions{display:flex;gap:25px}
+.btn{padding:16px 30px;border-radius:10px;border:1px solid #3d941f;font-weight:bold;cursor:pointer}
+.primary{background:#3d941f;color:#fff}.secondary{background:#fff;color:#367c20}
+.hero-food{height:555px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,#eaf1dc,#f7f9f4 60%)}
+.food-bowl{width:490px;height:490px;border-radius:50%;background:#fff;box-shadow:0 20px 50px rgba(35,60,25,.14);display:grid;place-items:center}
+.food-items{font-size:70px;line-height:1.45;text-align:center}
+.benefits{margin-top:-45px;position:relative}
+.benefit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:25px}
+.benefit{background:#fff;border-radius:18px;box-shadow:0 9px 32px rgba(30,50,20,.09);padding:28px 30px;display:flex;gap:20px;align-items:center}
+.icon{width:68px;height:68px;min-width:68px;border-radius:50%;background:#eef6e9;color:#3d941f;display:grid;place-items:center;font-size:29px}
+.benefit h3{font-size:20px;margin-bottom:5px}.benefit p{color:#5d645d;line-height:1.5}
+.category-box{margin:50px auto;background:#f7f9f4;border-radius:20px;padding:29px 32px}
+.category-grid{display:grid;grid-template-columns:repeat(6,1fr)}
+.category{padding:12px 18px;border-right:1px solid #dce2d8;display:flex;gap:13px;align-items:center}
+.category:last-child{border:0}.category-icon{font-size:29px;color:#3d941f}
+.category strong,.category small{display:block}.category small{font-size:12px;color:#656c64;margin-top:4px}
+
+/* API PAGES */
+.api-page{padding:45px 0 70px}
+.page-heading{display:flex;justify-content:space-between;align-items:end;margin-bottom:25px}
+.page-heading h1{font-size:40px;margin-bottom:7px}
+.page-heading p{color:#687067}
+.count{color:#37871c;font-weight:bold}
+.toolbar{display:flex;gap:12px;margin-bottom:22px}
+.control{height:44px;border:1px solid #dfe4dc;border-radius:10px;padding:0 14px;outline:0;background:#fff}
+.search-control{width:340px}
+.status{padding:15px;background:#f4f8f0;border-radius:10px;color:#557050;margin-bottom:20px}
+.status.error{background:#fff0f0;color:#a42c2c}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.card{background:#fff;border:1px solid #e1e6df;border-radius:17px;overflow:hidden;transition:.2s}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(30,50,20,.1)}
+.fruit-img{height:160px;background:#f0f7ea;display:grid;place-items:center;font-size:75px}
+.card-body{padding:18px}
+.card-body h3{font-size:20px;margin-bottom:5px}
+.muted{font-size:13px;color:#788078;margin-bottom:14px}
+.nutrients{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+.nutrient{background:#f5f8f2;border-radius:7px;padding:7px;font-size:12px;color:#45613d}
+.nutrient strong{display:block;color:#1d3219;font-size:13px;margin-top:2px}
+.recipe-image{width:100%;height:190px;object-fit:cover;background:#f1f5ed}
+.recipe-body{padding:18px}.recipe-body h3{font-size:19px}
+.tags{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}
+.tag{font-size:12px;padding:5px 8px;border-radius:7px;background:#eef6e9;color:#3b6d2c}
+.recipe-body p{font-size:13px;color:#626a61;line-height:1.5}
+.more{text-align:center;margin-top:28px}
+
+/* TRAINERS / CONTACT */
+.simple-section{padding:60px 0}
+.trainer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:25px}
+.trainer{background:#f7f9f4;padding:25px;border-radius:17px;display:flex;gap:18px;align-items:center}
+.avatar{width:70px;height:70px;border-radius:50%;background:#e8f3e2;display:grid;place-items:center;font-size:30px}
+.trainer small{color:#3d921f;font-weight:bold}
+.trainer p{color:#697169;font-size:14px;margin-top:4px}
+.contact{background:#f7f9f4;border-radius:20px;padding:35px;display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.contact h1{font-size:34px;margin-bottom:12px}.contact p{color:#60685f;line-height:1.6}
+.form{display:grid;gap:13px}.form input,.form textarea{border:1px solid #dce2d9;border-radius:10px;padding:14px;outline:0}.form textarea{height:120px}
+footer{background:#132011;color:#fff;padding:25px 0;margin-top:20px}
+.footer{display:flex;justify-content:space-between}.footer span{color:#9ed281}
+
+
+/* DETAIL PAGES */
+.detail-page{padding:42px 0 70px}.back-btn{border:0;background:none;color:#39881f;font-weight:700;margin-bottom:22px;font-size:15px}.detail-layout{display:grid;grid-template-columns:42% 58%;gap:42px;align-items:start}.detail-visual{min-height:460px;background:#f2f7ed;border-radius:24px;display:grid;place-items:center}.detail-emoji{font-size:170px}.detail-content h1{font-size:46px;margin-bottom:8px}.detail-sub{color:#697169;margin-bottom:20px}.detail-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:25px}.detail-tag{background:#edf6e8;color:#39772a;padding:7px 11px;border-radius:8px;font-size:13px}.detail-section{margin-top:25px}.detail-section h2{font-size:22px;margin-bottom:13px}.info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.info-box{border:1px solid #e0e6de;border-radius:11px;padding:13px}.info-box span{display:block;font-size:12px;color:#747c73}.info-box strong{display:block;font-size:17px;margin-top:4px}.nutrition-table{width:100%;border-collapse:collapse}.nutrition-table td{padding:12px;border-bottom:1px solid #e5eae3}.nutrition-table td:last-child{text-align:right;font-weight:700;color:#3b831f}.ingredient-list{display:grid;grid-template-columns:1fr 1fr;gap:9px}.ingredient{background:#f6f8f4;border-radius:9px;padding:10px 12px;font-size:14px}.instructions{padding-left:20px}.instructions li{margin-bottom:10px;color:#555d54;line-height:1.55}.recipe-detail-image{width:100%;height:430px;object-fit:cover;border-radius:24px;background:#f0f6eb}
+
+/* MOBILE */
+@media(max-width:1100px){
+.search{width:280px}.menu{gap:20px}.hero h1{font-size:54px}.grid{grid-template-columns:repeat(3,1fr)}.category-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:800px){
+.detail-layout{grid-template-columns:1fr}.ingredient-list{grid-template-columns:1fr}.detail-content h1{font-size:38px}.detail-visual{min-height:320px}.detail-emoji{font-size:120px}.recipe-detail-image{height:300px}
+header{height:auto}.nav{padding:14px 0;flex-wrap:wrap}.logo{margin-right:0}.menu{order:3;width:100%;height:45px;justify-content:space-between}.menu button{height:45px}.search{flex:1}
+.hero-grid{grid-template-columns:1fr}.hero-content{padding:45px 0}.hero h1{font-size:45px}.hero-food{height:330px}.food-bowl{width:290px;height:290px}
+.benefits{margin-top:0;padding-top:20px}.benefit-grid,.grid,.trainer-grid,.contact{grid-template-columns:1fr}.category-grid{grid-template-columns:repeat(2,1fr)}
+.toolbar{flex-direction:column}.search-control{width:100%}.footer{flex-direction:column;gap:10px}
+}
+.recipe-card-image{display:block!important;width:100%;height:190px;object-fit:cover;font-size:0!important}
+.recipe-info{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px}
+.recipe-info div{background:#f5f8f2;border-radius:8px;padding:9px 10px}
+.recipe-info span{display:block;font-size:11px;color:#697268;margin-bottom:3px}
+.recipe-info b{font-size:14px;color:#20301d}
+.card-body{padding:19px}
+
+.recipe-detail-wrap{display:grid;gap:24px}
+.recipe-detail-top{display:grid;grid-template-columns:48% 52%;gap:42px;align-items:center}
+.recipe-detail-image{width:100%;height:430px;object-fit:cover;border-radius:24px;background:#f0f6eb}
+.recipe-detail-info h1{font-size:46px;line-height:1.1;margin:8px 0 10px}
+.detail-label{font-size:12px;font-weight:800;letter-spacing:1.5px;color:#4a922e}
+.recipe-detail-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:24px}
+.recipe-detail-stats div{border:1px solid #e1e8de;border-radius:12px;padding:14px;background:#fff}
+.recipe-detail-stats span{display:block;font-size:12px;color:#747c73;margin-bottom:5px}
+.recipe-detail-stats strong{font-size:17px;color:#20301d}
+.recipe-detail-columns{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.recipe-detail-card{background:#fff;border:1px solid #e2e8df;border-radius:18px;padding:24px}
+.recipe-detail-card h2{font-size:22px;margin:0 0 16px}
+.nutrition-highlight{display:grid;gap:12px}
+.nutrition-highlight div{background:#f4f8f0;border-radius:12px;padding:15px}
+.nutrition-highlight span{display:block;font-size:12px;color:#6f786c;margin-bottom:4px}
+.nutrition-highlight strong{font-size:18px;color:#3b831f}
+.nutrition-note{color:#737b70;font-size:13px;line-height:1.5;margin-top:15px}
+.cooking-toggle{width:100%;border:0;border-radius:12px;background:#3c8c23;color:#fff;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;font-size:17px;font-weight:700;cursor:pointer}
+.cooking-toggle:hover{background:#33791e}
+.cooking-plus{font-size:25px;line-height:1}
+.cooking-content{display:none;margin-top:16px;background:#f7faf5;border-radius:12px;padding:18px 22px}
+.cooking-content.open{display:block}
+.instructions{padding-left:23px;margin:0}
+.instructions li{margin-bottom:12px;color:#555d54;line-height:1.6}
+@media(max-width:800px){
+.recipe-detail-top,.recipe-detail-columns{grid-template-columns:1fr}
+.recipe-detail-image{height:300px}
+.recipe-detail-info h1{font-size:36px}
+}
+
+</style>
+</head>
+<body>
+
+<header>
+<div class="container nav">
+<div class="logo" onclick="showPage('home')"><div class="logo-icon">🌿</div>Nutri<span>Fact</span></div>
+
+<nav class="menu">
+<button id="nav-home" class="active" onclick="showPage('home')">Home</button>
+<button id="nav-fruits" onclick="showPage('fruits')">Fruits</button>
+<button id="nav-recipes" onclick="showPage('recipes')">Recipes</button>
+<button id="nav-trainers" onclick="showPage('trainers')">Trainers</button>
+<button id="nav-contact" onclick="showPage('contact')">Contact</button>
+</nav>
+
+<div class="search">
+<input id="globalSearch" placeholder="Search food, nutrients, etc..." onkeydown="if(event.key==='Enter')globalSearch()">
+<button onclick="globalSearch()">⌕</button>
+</div>
+</div>
+</header>
+
+<!-- HOME PAGE -->
+<section id="page-home" class="page active">
+<div class="hero">
+<div class="container hero-grid">
+<div class="hero-content">
+<h1>Know Your Food.<br><span>Fuel Your Life.</span></h1>
+<p>Your trusted source to explore food nutrition factors, make healthier choices and live better every day.</p>
+<div class="actions">
+<button class="btn primary" onclick="showPage('fruits')">Explore Nutrition →</button>
+<button class="btn secondary" onclick="showPage('recipes')">Browse Recipes</button>
+</div>
+</div>
+<div class="hero-food"><div class="food-bowl"><div class="food-items">🥦 🥬 🥑<br>🫘 🍅 🥕<br>🥗</div></div></div>
+</div>
+</div>
+
+<div class="benefits">
+<div class="container benefit-grid">
+<div class="benefit"><div class="icon">🍃</div><div><h3>Understand Nutrition</h3><p>Simple, science-backed nutrition facts.</p></div></div>
+<div class="benefit"><div class="icon">🍽</div><div><h3>Make Better Choices</h3><p>Choose foods that nourish your body.</p></div></div>
+<div class="benefit"><div class="icon">♡</div><div><h3>Live Healthier</h3><p>Balanced diet today, better life tomorrow.</p></div></div>
+</div>
+</div>
+
+<div class="container category-box">
+<h2 style="margin-bottom:22px">Popular Categories</h2>
+<div class="category-grid">
+<div class="category"><span class="category-icon">💊</span><div><strong>Vitamins</strong><small>Essential nutrients</small></div></div>
+<div class="category"><span class="category-icon">🛡</span><div><strong>Minerals</strong><small>Support your body</small></div></div>
+<div class="category"><span class="category-icon">🐟</span><div><strong>Proteins</strong><small>Build and repair</small></div></div>
+<div class="category"><span class="category-icon">🌾</span><div><strong>Carbohydrates</strong><small>Your energy source</small></div></div>
+<div class="category"><span class="category-icon">💧</span><div><strong>Fats</strong><small>Healthy and essential</small></div></div>
+<div class="category"><span class="category-icon">🍃</span><div><strong>Fiber</strong><small>Digestive health</small></div></div>
+</div>
+</div>
+</section>
+
+<!-- FRUITS PAGE -->
+<section id="page-fruits" class="page">
+<div class="container api-page">
+<div class="page-heading">
+<div><h1>Fruits</h1><p>Nutrition information fetched from FruityVice.</p></div>
+<div id="fruitCount" class="count">Loading...</div>
+</div>
+<div class="toolbar">
+<input id="fruitSearch" class="control search-control" placeholder="Search fruits..." oninput="filterFruits()">
+</div>
+<div id="fruitStatus" class="status">Loading fruit data...</div>
+<div id="fruitGrid" class="grid"></div>
+</div>
+</section>
+
+<!-- FRUIT DETAIL PAGE -->
+<section id="page-fruit-detail" class="page">
+<div class="container detail-page">
+<button class="back-btn" onclick="showPage('fruits')">← Back to Fruits</button>
+<div id="fruitDetail"></div>
+</div>
+</section>
+
+<!-- RECIPES PAGE -->
+<section id="page-recipes" class="page">
+<div class="container api-page">
+<div class="page-heading">
+<div><h1>Recipes</h1><p>Recipes fetched from DummyJSON.</p></div>
+<div id="recipeCount" class="count">Loading...</div>
+</div>
+<div class="toolbar">
+<input id="recipeSearch" class="control search-control" placeholder="Search recipes..." oninput="filterRecipes()">
+<select id="recipeDifficulty" class="control" onchange="filterRecipes()">
+<option value="">All difficulties</option>
+<option>Easy</option><option>Medium</option><option>Hard</option>
+</select>
+</div>
+<div id="recipeStatus" class="status">Loading recipe data...</div>
+<div id="recipeGrid" class="grid"></div>
+<div class="more"><button id="recipeMore" class="btn secondary" onclick="showMoreRecipes()">View More Recipes</button></div>
+</div>
+</section>
+
+<!-- RECIPE DETAIL PAGE -->
+<section id="page-recipe-detail" class="page">
+<div class="container detail-page">
+<button class="back-btn" onclick="showPage('recipes')">← Back to Recipes</button>
+<div id="recipeDetail"></div>
+</div>
+</section>
+
+<!-- TRAINERS PAGE -->
+<section id="page-trainers" class="page">
+<div class="container simple-section">
+<h1>Trainers</h1><p style="color:#687067;margin-top:7px">Connect with trainers who can guide your nutrition and wellness journey.</p>
+<div class="trainer-grid">
+<div class="trainer"><div class="avatar">👩‍🏫</div><div><h3>Ananya Sharma</h3><small>Fitness Trainer</small><p>Strength & wellness</p></div></div>
+<div class="trainer"><div class="avatar">👨‍🏫</div><div><h3>Rahul Menon</h3><small>Nutrition Trainer</small><p>Healthy lifestyle</p></div></div>
+<div class="trainer"><div class="avatar">👩‍⚕️</div><div><h3>Meera Nair</h3><small>Wellness Coach</small><p>Weight management</p></div></div>
+</div>
+</div>
+</section>
+
+<!-- CONTACT PAGE -->
+<section id="page-contact" class="page">
+<div class="container simple-section">
+<div class="contact">
+<div><h1>Contact NutriFact</h1><p>Have a question about nutrition, fruits, recipes or trainers? Send us a message and our team will get back to you.</p></div>
+<form class="form" onsubmit="sendMessage(event)">
+<input required placeholder="Your name">
+<input required type="email" placeholder="Email address">
+<textarea required placeholder="Your message"></textarea>
+<button class="btn primary">Send Message →</button>
+</form>
+</div>
+</div>
+</section>
+
+<footer>
+<div class="container footer"><strong>Nutri<span>Fact</span></strong><span>Know Your Food. Fuel Your Life.</span><small>© 2026 NutriFact</small></div>
+</footer>
+
+<script>
+const FRUIT_API="https://www.fruityvice.com/api/fruit/all";
+const RECIPE_API="https://dummyjson.com/recipes?limit=0";
+
+let fruits=[];
+let recipes=[];
+let visibleRecipes=8;
+
+/* CLICK MENU: only selected page is shown */
+function showPage(page){
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+document.getElementById("page-"+page).classList.add("active");
+
+document.querySelectorAll(".menu button").forEach(b=>b.classList.remove("active"));
+if(document.getElementById("nav-"+page)) document.getElementById("nav-"+page).classList.add("active");
+if(page==="fruit-detail") document.getElementById("nav-fruits").classList.add("active");
+if(page==="recipe-detail") document.getElementById("nav-recipes").classList.add("active");
+
+window.scrollTo({top:0,behavior:"smooth"});
+
+if(page==="fruits" && fruits.length===0) loadFruits();
+if(page==="recipes" && recipes.length===0) loadRecipes();
+}
+
+/* FRUITS API */
+function fruitEmoji(name){
+const map={apple:"🍎",banana:"🍌",orange:"🍊",strawberry:"🍓",blueberry:"🫐",blackberry:"🫐",raspberry:"🍓",cherry:"🍒",peach:"🍑",pear:"🍐",mango:"🥭",pineapple:"🍍",watermelon:"🍉",lemon:"🍋",lime:"🍋",kiwi:"🥝",kiwifruit:"🥝",papaya:"🥭",pomegranate:"🍎",grape:"🍇",avocado:"🥑",fig:"🫐",plum:"🟣",coconut:"🥥",guava:"🍐",apricot:"🍑",melon:"🍈",tangerine:"🍊",cranberry:"🫐",jackfruit:"🍈",persimmon:"🟠",pumpkin:"🎃",pomelo:"🍊",mangosteen:"🟣"};
+return map[name.toLowerCase()]||"🍃";
+}
+
+async function loadFruits(){
+try{
+const res=await fetch(FRUIT_API);
+if(!res.ok)throw new Error();
+fruits=await res.json();
+document.getElementById("fruitStatus").style.display="none";
+displayFruits(fruits);
+}catch(e){
+const s=document.getElementById("fruitStatus");
+s.className="status error";
+s.textContent="Unable to load fruit data. Please check your internet connection or API availability.";
+document.getElementById("fruitCount").textContent="Unavailable";
+}
+}
+
+function displayFruits(list){
+document.getElementById("fruitCount").textContent=list.length+" fruits";
+document.getElementById("fruitGrid").innerHTML=list.map(f=>`
+<div class="card">
+  <div class="card-image">${fruitEmoji(f.name)}</div>
+  <div class="card-body">
+    <h3>${escapeHtml(f.name)}</h3>
+    <div class="meta">Family: ${escapeHtml(f.family||"Fruit")}</div>
+    <div class="card-actions">
+      <button class="small-btn primary-small" onclick="openFruitByName('${escapeJs(f.name)}')">View Details</button>
+    </div>
+  </div>
+</div>`).join("");
+}
+function filterFruits(){
+const q=document.getElementById("fruitSearch").value.toLowerCase();
+const list=fruits.filter(f=>(f.name+" "+(f.family||"")+" "+(f.genus||"")).toLowerCase().includes(q));
+displayFruits(list);
+}
+function openFruitByName(name){
+const fruit=fruits.find(f=>f.name===name);
+if(!fruit)return;
+const n=fruit.nutritions||{};
+document.getElementById("fruitDetail").innerHTML=`<div class="detail-layout"><div class="detail-visual"><div class="detail-emoji">${fruitEmoji(fruit.name)}</div></div><div class="detail-content"><h1>${escapeHtml(fruit.name)}</h1><p class="detail-sub">Detailed information and nutrition profile from FruityVice.</p><div class="detail-tags"><span class="detail-tag">${escapeHtml(fruit.family||"Fruit")}</span><span class="detail-tag">${escapeHtml(fruit.genus||"")}</span><span class="detail-tag">${escapeHtml(fruit.order||"")}</span></div><div class="detail-section"><h2>Basic Information</h2><div class="info-grid"><div class="info-box"><span>Name</span><strong>${escapeHtml(fruit.name)}</strong></div><div class="info-box"><span>Family</span><strong>${escapeHtml(fruit.family||"-")}</strong></div><div class="info-box"><span>Genus</span><strong>${escapeHtml(fruit.genus||"-")}</strong></div><div class="info-box"><span>Order</span><strong>${escapeHtml(fruit.order||"-")}</strong></div></div></div><div class="detail-section"><h2>Nutrition Factors <small style="font-size:12px;color:#777">per 100g</small></h2><table class="nutrition-table"><tr><td>Calories</td><td>${n.calories??"-"} kcal</td></tr><tr><td>Protein</td><td>${n.protein??"-"} g</td></tr><tr><td>Carbohydrates</td><td>${n.carbohydrates??"-"} g</td></tr><tr><td>Sugar</td><td>${n.sugar??"-"} g</td></tr><tr><td>Fat</td><td>${n.fat??"-"} g</td></tr></table></div><div class="detail-section"><h2>Ingredients / Natural Components</h2><p style="color:#626b61;line-height:1.6">A whole fruit does not have recipe ingredients. The natural nutrition factors above are the components supplied by the FruityVice API.</p></div></div></div>`;
+showPage("fruit-detail");
+}
+
+/* RECIPES API */
+async function loadRecipes(){
+try{
+const res=await fetch(RECIPE_API);
+if(!res.ok)throw new Error();
+const data=await res.json();
+recipes=data.recipes||[];
+document.getElementById("recipeStatus").style.display="none";
+displayRecipes();
+}catch(e){
+const s=document.getElementById("recipeStatus");
+s.className="status error";
+s.textContent="Unable to load recipes. Please check your internet connection or API availability.";
+document.getElementById("recipeCount").textContent="Unavailable";
+}
+}
+
+function displayRecipes(){
+const q=(document.getElementById("recipeSearch")?.value||"").toLowerCase();
+const d=document.getElementById("recipeDifficulty")?.value||"";
+const list=recipes.filter(r=>{
+const text=(r.name+" "+(r.cuisine||"")+" "+(r.tags||[]).join(" ")).toLowerCase();
+return text.includes(q)&&(!d||r.difficulty===d);
+});
+document.getElementById("recipeCount").textContent=list.length+" recipes";
+document.getElementById("recipeGrid").innerHTML=list.slice(0,visibleRecipes).map(r=>`
+<div class="card">
+  <img class="card-image recipe-card-image" src="${r.image}" alt="${escapeHtml(r.name)}"
+       onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
+  <div class="recipe-fallback card-image" style="display:none">🍲</div>
+  <div class="card-body">
+    <h3>${escapeHtml(r.name)}</h3>
+    <div class="meta">Cuisine: ${escapeHtml(r.cuisine||"Recipe")}</div>
+    <div class="recipe-info">
+      <div><span>⭐ Rating</span><b>${r.rating??"-"}</b></div>
+      <div><span>⏱ Preparation</span><b>${r.prepTimeMinutes??0} min</b></div>
+    </div>
+    <div class="card-actions">
+      <button class="small-btn primary-small" onclick="openRecipe(${r.id})">View Recipe</button>
+    </div>
+  </div>
+</div>`).join("");
+const more=document.getElementById("moreRecipes");
+if(more)more.style.display=list.length>visibleRecipes?"inline-block":"none";
+}
+function filterRecipes(){visibleRecipes=8;displayRecipes()}
+
+
+function openRecipe(id){
+const r=recipes.find(x=>x.id===id);
+if(!r)return;
+
+document.getElementById("recipeDetail").innerHTML=`
+<div class="recipe-detail-wrap">
+  <div class="recipe-detail-top">
+    <div>
+      <img class="recipe-detail-image" src="${r.image}" alt="${escapeHtml(r.name)}">
+    </div>
+
+    <div class="recipe-detail-info">
+      <span class="detail-label">RECIPE</span>
+      <h1>${escapeHtml(r.name)}</h1>
+      <p class="detail-sub">${escapeHtml(r.cuisine||"Healthy Recipe")} · ${escapeHtml(r.difficulty||"")}</p>
+
+      <div class="recipe-detail-stats">
+        <div><span>⭐ Rating</span><strong>${r.rating??"-"}</strong></div>
+        <div><span>⏱ Preparation</span><strong>${r.prepTimeMinutes??0} min</strong></div>
+        <div><span>🔥 Cooking</span><strong>${r.cookTimeMinutes??0} min</strong></div>
+        <div><span>🍽 Servings</span><strong>${r.servings??"-"}</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="recipe-detail-columns">
+    <div class="recipe-detail-card">
+      <h2>Ingredients</h2>
+      <ul class="ingredient-list">
+        ${(r.ingredients||[]).map(i=>`<li class="ingredient">${escapeHtml(i)}</li>`).join("")}
+      </ul>
+    </div>
+
+    <div class="recipe-detail-card">
+      <h2>Nutrition Factors</h2>
+      <div class="nutrition-highlight">
+        <div><span>Calories per serving</span><strong>${r.caloriesPerServing??"-"} kcal</strong></div>
+        <div><span>Servings</span><strong>${r.servings??"-"}</strong></div>
+      </div>
+      <p class="nutrition-note">Nutrition information shown here is the nutrition data provided by the recipe API.</p>
+    </div>
+  </div>
+
+  <div class="recipe-detail-card cooking-card">
+    <button class="cooking-toggle" onclick="toggleCookingInstructions(this)">
+      <span>Cooking Instructions</span>
+      <span class="cooking-plus">＋</span>
+    </button>
+
+    <div class="cooking-content">
+      <ol class="instructions">
+        ${(r.instructions||[]).map(i=>`<li>${escapeHtml(i)}</li>`).join("")}
+      </ol>
+    </div>
+  </div>
+</div>`;
+
+showPage("recipe-detail");
+}
+
+function toggleCookingInstructions(button){
+const content=button.nextElementSibling;
+const isOpen=content.classList.toggle("open");
+button.classList.toggle("active",isOpen);
+button.querySelector(".cooking-plus").textContent=isOpen?"−":"＋";
+}
+
+function escapeHtml(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
+function escapeJs(v){return String(v??"").replace(/\\/g,"\\\\").replace(/'/g,"\\'");}
+
+/* GLOBAL SEARCH */
+function globalSearch(){
+const q=document.getElementById("globalSearch").value.toLowerCase().trim();
+if(!q)return;
+
+const fruit=fruits.find(f=>f.name.toLowerCase().includes(q));
+if(fruit){ openFruitByName(fruit.name); return; }
+
+const recipe=recipes.find(r=>r.name.toLowerCase().includes(q)||(r.tags||[]).join(" ").toLowerCase().includes(q));
+if(recipe){ openRecipe(recipe.id); return; }
+
+alert("No matching fruit or recipe found.");
+}
+
+function sendMessage(e){
+e.preventDefault();
+alert("Thank you! Your message has been submitted.");
+e.target.reset();
+}
+
+/* Load data in background so clicking the menu is instant */
+loadFruits();
+loadRecipes();
+</script>
+</body>
+</html>

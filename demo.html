@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Users API</title>
+     <style>
+        table{
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th,td{
+            border:1px solid black;
+            padding:8px;
+            text-align:center;
+        }
+        th{
+            background-color:navy;
+            color:white;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Users List</h2>
+<label>Search users</label><input type="text" size="4" id="su"  onkeyup="filterUsers()">
+<label>Sort By</label>
+<select id="sort" onchange="sortUsers()">
+    <option value="">Default</option>
+    <option value="nameAsc">Name (A-Z)</option>
+    <option value="nameDesc">Name (Z-A)</option>
+    <option value="ageAsc">Age (Low-High)</option>
+    <option value="ageDesc">Age (High-Low)</option>
+</select>
+<label>Age</label>
+<select id="age" onchange="filterUsers()">
+    <option value="">All</option>
+    <option value="20">Below 20</option>
+    <option value="30">20 - 30</option>
+    <option value="40">31 - 40</option>
+    <option value="50">Above 40</option>
+</select>
+<label>Gender</label>
+<select id="gender" onchange="filterUsers()">
+    <option value="">All</option>
+    <option value="male">Male</option>
+    <option value="female">Female</option>
+</select>
+<label>City</label>
+<select id="city" onchange="filterUsers()">
+    <option value="">All</option>
+    <option value="Phoenix">Phoenix</option>
+    <option value="Houston">Houston</option>
+    <option value="Los Angeles">Los Angeles</option>
+    <option value="Chicago">Chicago</option>
+    <option value="Miami">Miami</option>
+</select>
+<button onclick="loadUsers()">Load Users</button>
+<button onclick="resetFilters()">Reset</button>
+<button onclick="toggleFilters()">More Info</button>
+<div id="moreFilters" style="display:none; margin-top:15px;">
+
+    <label>Blood Group</label>
+    <select id="blood" onchange="filterUsers()">
+        <option value="">All</option>
+        <option>A+</option>
+        <option>A-</option>
+        <option>B+</option>
+        <option>B-</option>
+        <option>AB+</option>
+        <option>AB-</option>
+        <option>O+</option>
+        <option>O-</option>
+    </select>
+
+    <label>Eye Color</label>
+    <select id="eye" onchange="filterUsers()">
+        <option value="">All</option>
+        <option>Brown</option>
+        <option>Blue</option>
+        <option>Green</option>
+        <option>Hazel</option>
+    </select>
+
+    <label>Hair Color</label>
+    <select id="hair" onchange="filterUsers()">
+        <option value="">All</option>
+        <option>Black</option>
+        <option>Brown</option>
+        <option>Blonde</option>
+        <option>Red</option>
+    </select>
+    <label>Address</label>
+    <select id="address" onchange="filterUsers()">
+        <option value="">All</option>
+        <option>626 Main Street</option>
+        <option>385 Fifth Street</option>
+        <option>395 Main Street</option>
+        <option>1642 Ninth Street</option>
+    </select>
+
+</div>
+<p id="demo"></p>
+<div  id="pagination" style="margin-top:20px;"></div>
+<script>
+
+let users = [];
+let filteredUsers = [];
+let currentPage = 1;
+const rowsPerPage = 5;
+
+function loadUsers(){
+
+    const http = new XMLHttpRequest();
+
+    http.onload = function(){
+
+        let data = JSON.parse(this.responseText);
+        users = data.users;
+        filteredUsers = users;
+
+        displayUsers();
+    }
+
+    http.open("GET","https://dummyjson.com/users");
+    http.send();
+}
+
+function displayUsers(){
+
+    let start = (currentPage - 1) * rowsPerPage;
+    let end = start + rowsPerPage;
+
+    let pageUsers = filteredUsers.slice(start,end);
+
+    let output = `
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Blood Group</th>
+            <th>City</th>
+        </tr>
+    `;
+
+    for(let i=0;i<pageUsers.length;i++){
+
+        output += `
+        <tr>
+            <td>${pageUsers[i].id}</td>
+            <td>${pageUsers[i].firstName} ${pageUsers[i].lastName}</td>
+            <td>${pageUsers[i].age}</td>
+            <td>${pageUsers[i].gender}</td>
+            <td>${pageUsers[i].bloodGroup}</td>
+            <td>${pageUsers[i].address.city}</td>
+        </tr>
+        `;
+    }
+
+    if(pageUsers.length == 0){
+    document.getElementById("demo").innerHTML = "<h3>No users found.</h3>";
+    }
+    else{
+    output += "</table>";
+    document.getElementById("demo").innerHTML = output;
+    }
+
+    let totalPages = Math.ceil(filteredUsers.length / rowsPerPage);
+
+    showPagination();
+}
+function filterUsers(){
+
+    let keyword = document.getElementById("su").value.toLowerCase();
+    let age = document.getElementById("age").value;
+    let gender = document.getElementById("gender").value;
+    let city = document.getElementById("city").value;
+
+
+    filteredUsers = users.filter(function(user){
+
+        let fullname = (user.firstName + " " + user.lastName).toLowerCase();
+
+        let matchName = fullname.includes(keyword);
+
+        let matchAge = true;
+
+        if(age == "20"){
+            matchAge = user.age < 20;
+        }
+        else if(age == "30"){
+            matchAge = user.age >= 20 && user.age <= 30;
+        }
+        else if(age == "40"){
+            matchAge = user.age >= 31 && user.age <= 40;
+        }
+        else if(age == "50"){
+            matchAge = user.age > 40;
+        }
+        let matchGender = true;
+
+        if(gender != ""){
+            matchGender = user.gender.toLowerCase() == gender;
+        }
+        let matchCity = true;
+
+        if(city != ""){
+        matchCity = user.address.city == city;
+        }
+
+        return matchName && matchAge && matchGender && matchCity;
+        
+    });
+
+    currentPage = 1;
+    displayUsers();
+}
+function sortUsers(){
+
+    let sort = document.getElementById("sort").value;
+
+    if(sort == "nameAsc"){
+
+        filteredUsers.sort(function(a,b){
+            return (a.firstName + " " + a.lastName)
+                .localeCompare(b.firstName + " " + b.lastName);
+        });
+
+    }
+    else if(sort == "nameDesc"){
+
+        filteredUsers.sort(function(a,b){
+            return (b.firstName + " " + b.lastName)
+                .localeCompare(a.firstName + " " + a.lastName);
+        });
+
+    }
+    else if(sort == "ageAsc"){
+
+        filteredUsers.sort(function(a,b){
+            return a.age - b.age;
+        });
+
+    }
+    else if(sort == "ageDesc"){
+
+        filteredUsers.sort(function(a,b){
+            return b.age - a.age;
+        });
+
+    }
+
+    currentPage = 1;
+    displayUsers();
+}
+function resetFilters(){
+
+    // Clear search box
+    document.getElementById("su").value = "";
+    document.getElementById("sort").value = "";
+
+    // Reset dropdowns
+    document.getElementById("age").value = "";
+    document.getElementById("gender").value = "";
+    document.getElementById("city").value = "";
+
+    // Show all users
+    filteredUsers = users;
+
+    // Go back to first page
+    currentPage = 1;
+
+    // Refresh the table
+    sortUsers();
+}
+function toggleFilters(){
+
+    let div = document.getElementById("moreFilters");
+
+    if(div.style.display == "none"){
+        div.style.display = "block";
+    }
+    else{
+        div.style.display = "none";
+    }
+
+}
+function showPagination(){
+
+    let totalPages = Math.ceil(filteredUsers.length / rowsPerPage);
+
+    let output = "";
+
+    // Previous button
+    output += `<button onclick="previousPage()" ${currentPage==1 ? "disabled" : ""}>Previous</button> `;
+
+    // Numbered page buttons
+    for(let i=1;i<=totalPages;i++){
+
+        if(i == currentPage){
+            output += `<button style="background:navy;color:white;" onclick="goToPage(${i})">${i}</button> `;
+        }
+        else{
+            output += `<button onclick="goToPage(${i})">${i}</button> `;
+        }
+
+    }
+
+    // Next button
+    output += `<button onclick="nextPage()" ${currentPage==totalPages ? "disabled" : ""}>Next</button>`;
+
+    document.getElementById("pagination").innerHTML = output;
+}
+function goToPage(page){
+
+    currentPage = page;
+    displayUsers();
+
+}
+function nextPage(){
+
+    let totalPages = Math.ceil(filteredUsers.length / rowsPerPage);
+
+    if(currentPage < totalPages){
+        currentPage++;
+        displayUsers();
+    }
+}
+
+function previousPage(){
+
+    if(currentPage > 1){
+        currentPage--;
+        displayUsers();
+    }
+}
+</script>
+
+</body>
+</html>

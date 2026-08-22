@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h2>Electricity Bill Payment</h2>
+<label>Consumer Name</label><input type="text" size=5 id="cn"><br><br>
+<label>Consumer Id</label><input type="text" size=5 id="id"><br><br>
+<label>Previous Meter Reading</label><input type="text" size=5 id="mt"><br><br>
+<label>Current Meter Reading</label><input type="text" size=5 id="cmt"><br><br>
+<input type="button" value="clear" onClick='clearAll()'></input>
+<input type="button" value="payment" onClick='billPayment()'></input><br><br>
+<label>Unit Used</label><input type="text" size=5 id="uu" readonly><br><br>
+<label>Per Unit Rate</label><input type="text" size=5 id="pur" readonly><br><br>
+<label>Meter Charge</label><input type="text" size=5 id="mc" readonly><br><br>
+<label>Sur Charge</label><input type="text" size=5 id="sc" readonly><br><br>
+<script>
+    function clearAll(){
+        document.getElementById("cn").value="";
+        document.getElementById("id").value="";
+        document.getElementById("mt").value="";
+        document.getElementById("cmt").value="";
+        document.getElementById("uu").value="";
+        document.getElementById("pur").value="";
+        document.getElementById("mc").value="";
+        document.getElementById("sc").value="";
+        document.getElementById("cn").focus();
+
+    }
+function billPayment(){
+    let cname=document.getElementById("cn").value;
+    let cid=parseInt(document.getElementById("id").value);
+    let pmr=parseInt(document.getElementById("mt").value);
+    let cmr=parseInt(document.getElementById("cmt").value);
+    let unit= pmr-cmr;
+    let purate;
+    let mcharge;
+    let scharge;
+    if (unit <= 50){
+    purate=4;   
+    mcharge=30;
+    scharge=0;
+    }
+    else if (50 <= 100){
+        purate=5;
+        mcharge=50;
+        scharge=20;
+    }
+    else if (100 <=250){
+        purate=7;
+        mcharge=80;
+        scharge=100;
+    }
+    else  {
+        purate=10;
+        mcharge=200;
+        scharge=200;
+    }
+    document.getElementById("uu").value=unit;
+    document.getElementById("pur").value=purate;
+    document.getElementById("mc").value=mcharge;
+    document.getElementById("sc").value=scharge;
+}
+</script>    
+</body>
+</html>

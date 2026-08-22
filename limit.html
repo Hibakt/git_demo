@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <h2>Input The Numbers</h2>
+    <label>lower limit</label><input type="text" size="3" id="ll"><br><br>
+    <label>upper limit</label><input type="text" size="3" id="ul"><br><br>
+    <input type="button" value="find" onClick='find()'></input>
+    <p id="result"></p>
+    <script>
+        function find(){
+            let L=parseInt(document.getElementById("ll").value);
+            let U=parseInt(document.getElementById("ul").value);
+             let output = "";
+
+            // Increment
+            for (let i = L; i <= U; i++) {
+
+                for (let j = L; j <= i; j++) {
+
+                    output = output + j;
+
+                    if (j < i) {
+                        output = output + ",";
+                    }
+                }
+
+                output = output + "<br>";
+            }
+
+            // Decrement
+            for (let i = U - 1; i >= L; i--) {
+
+                for (let j = L; j <= i; j++) {
+
+                    output = output + j;
+
+                    if (j < i) {
+                        output = output + ",";
+                    }
+                }
+
+                output = output + "<br>";
+            }
+
+            document.getElementById("result").innerHTML = output;
+        }
+    </script>
+</body>
+</html>

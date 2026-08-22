@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+
+<h1>Stock Management</h1>
+<label>SI No</label><input type="text" size="2" id="si">
+<label>Item Name</label><input type="text" id="iname">
+<label>Category</label>
+<select id="ica">
+    <option value="">--Select Category---</option>
+    <option value="Fruit">Fruit</option>
+    <option value="Vegies">Vegies</option>
+    <option value="Stationary">Stationary</option>
+</select>
+<label>Quantity</label><input type="text" size="3" id="iqt">
+<label>Rate</label><input type="text" size="3" id="irate">
+<label>Commission %</label><input type="text" size="3" id="icom" value="10">
+<button type="button" onClick='addStock()'>addstock </button>
+<button onClick='calculate()'>calculate</button><br><br>
+<table id="stockTable" border="1" cellpadding="12.5">
+    <thead>
+        <tr>
+            <th>S/I No</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Quantity</th>
+            <th>Rate</th>
+            <th>Price</th>
+            <th>Commission</th>
+        </tr>
+    </thead>
+<tbody id="result">
+</tbody>
+</table>
+</body>
+<script>
+let stock=[];
+function captitalizeFirst(str){
+    if(!str) return "";
+    return str.charAt(0).toUpperCase()+str.slice(1).toLowerCase();
+}
+function addStock(){
+    let qty=parseFloat(document.getElementById("iqt").value);
+    let rate=parseFloat(document.getElementById("irate").value);
+    let comper=parseFloat(document.getElementById("icom").value);
+    let item={
+        sino:parseInt(document.getElementById("si").value),
+        name:captitalizeFirst(document.getElementById("iname").value),
+        category:document.getElementById("ica").value,
+        quantity:qty,
+        rate:rate,
+        price:qty*rate,
+        commission:(qty*rate*comper)/100
+    };
+    stock.push(item);
+    displayTable();
+    document.getElementById("si").value="";
+    document.getElementById("iname").value="";
+    document.getElementById("ica").value="";
+    document.getElementById("iqt").value="";
+    document.getElementById("irate").value="";
+    document.getElementById("si").focus();
+}
+function displayTable(){
+    let tbody=document.getElementById("result");
+     tbody.innerHTML = "";
+
+    for (let i = 0; i < stock.length; i++) {
+     let rowColor = "";
+
+        if (stock[i].quantity <= 5) {
+            rowColor = "red";      
+        } 
+        else if (stock[i].quantity <= 10) {
+            rowColor = "yellow";      
+        } 
+        else {
+            rowColor = "green";      
+        }
+        tbody.innerHTML +=`
+        <tr style="background-color:${rowColor};">
+            <td>${stock[i].sino}</td>
+            <td>${stock[i].name}</td>
+            <td>${stock[i].category}</td>
+            <td>${stock[i].quantity}</td>
+            <td>${stock[i].rate}</td>
+            <td>${stock[i].price.toFixed(2)}</td>
+            <td>${stock[i].commission.toFixed(2)}</td>
+            </tr>`;
+    }
+}
+function calculate(){
+    let totalprice=0;
+    let totalcommission=0;
+   
+    for (let i=0;i<stock.length;i++){
+        totalprice += stock[i].price;
+        totalcommission += stock[i].commission;    
+    }
+    let totaldiscount=(totalprice * 10) / 100;
+        let actualprice=totalprice-totaldiscount;
+        
+     displayTable();
+
+    let tbody = document.getElementById("result");
+
+    tbody.innerHTML += `
+        <tr>
+            <th colspan="2"><b>Total Price</b></th>
+            <th colspan="2"><b>Total Commission</b></th>
+            <th colspan="2"><b>Total Discount</b></th>
+            <th colspan="2"><b>Actual Price</b></th>
+            </tr>
+            <tr>
+            <td colspan="2"><b>${totalprice.toFixed(2)}</b></td>
+            <td colspan="2"><b>${totalcommission.toFixed(2)}</b></td>
+            <td colspan="2"><b>${totaldiscount.toFixed(2)}</b></td>
+             <td colspan="2"><b>${actualprice.toFixed(2)}</b></td>
+        </tr>`;
+}
+</script>
+</html>
