@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <style>
+    .tables {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr); /* 5 tables in one row */
+    gap: 15px;
+}
+    </style>
+<body>
+<h1>Multiplication Table</h1>
+<label>Number</label><input type="text" size="4" id="numi"><br><br>
+<input type="button" value="showtable" onClick="showTable()">
+
+<div id="result"></div>
+
+<script>
+    function showTable(){
+        let num=parseInt(document.getElementById("numi").value);
+        let resultdiv=document.getElementById("result");
+        resultdiv.innerHTML="";
+        if (isNaN(num)||num<1||num>12){
+            resultdiv.innerHTML="please enter a number between 1 and 12";
+            return;
+        }
+        for(let i=1;i<=10;i++){
+            let currentTable=num*i;
+            let table=`<h4>Table of ${currentTable}</h4>`;
+    
+        for(let j=1;j<=10;j++){
+            table +=`${j}*${currentTable}=${j* currentTable}<br>`;
+        }
+        resultdiv.innerHTML +=table;
+    }
+    }
+
+</script>
+
+</body>
+</html>
